@@ -33,57 +33,50 @@
 #include <deque>
 #include <ctime>
 
-#include <boost/random.hpp>
-//#include <random>
+#include <random>
 
 #include "strtk.hpp"
-
-#ifndef strtk_enable_random
-   #error This example requires random
-#endif
-
+#include "dmrand.h"
 
 class random_line_selector
 {
 public:
 
-   random_line_selector(std::string& line, const std::size_t& seed = 0xA5A5A5A5)
-   : line_count_(1),
-     line_(line),
-     rng_(seed)
-   {}
+    random_line_selector(std::string& line)
+        : line_count_(1),
+          line_(line)
+    {}
 
-   inline void operator()(const std::string& s)
-   {
-      if (rng_() < (1.0 / line_count_))
-         line_ = s;
-      ++line_count_;
-   }
+    inline void operator()(const std::string& s)
+    {
+        if (CDMRand::Instance()->GetRand() < (10000 / line_count_))
+        {
+            line_ = s;
+        }
 
-private:
+        ++line_count_;
+    }
 
-   random_line_selector operator=(const random_line_selector&);
+public:
 
-   std::size_t line_count_; // should be long long
-   std::string& line_;
-   strtk::uniform_real_rng rng_;
+    random_line_selector operator=(const random_line_selector&);
+
+    std::size_t line_count_; // should be long long
+    std::string& line_;
 };
 
 int main(int argc, char* argv[])
 {
-   if (2 != argc)
-   {
-      std::cout << "usage: strtk_random_line <file name>" << std::endl;
-      return 1;
-   }
+    std::string file_name = __FILE__;
+    std::string line;
 
-   std::string file_name = argv[1];
-   std::string line;
+    for (int i=0; i < 10; i++)
+    {
+        strtk::for_each_line(file_name, random_line_selector(line));
 
-   strtk::for_each_line(file_name,
-                        random_line_selector(line,static_cast<std::size_t>(::time(0))));
+        std::cout << line << std::endl;
 
-   std::cout << line << std::endl;
+    }
 
-   return 0;
+    return 0;
 }
