@@ -7,15 +7,5 @@ INCLUDE(cmake/ModuleImport.cmake)
 INCLUDE(cmake/ModuleCompileOptions.cmake)
 ModuleSetCompileOptions()
 
-SET(DMSTRTK_VERSION_MAJOR "1")
-SET(DMSTRTK_VERSION_MINOR "0")
-SET(DMSTRTK_VERSION_PATCH "1")
-SET(DMSTRTK_VERSION "${DMSTRTK_VERSION_MAJOR}.${DMSTRTK_VERSION_MINOR}.${DMSTRTK_VERSION_PATCH}")
-
-MESSAGE(STATUS "VERSION: ${DMSTRTK_VERSION}")
-
-OPTION(USE_DMSTRTK "use dmstrtk" OFF)
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/include/dmstrtk_config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/dmstrtk_config.h)
-
 ModuleImportAll("thirdparty")
 ExeImport("test" "")

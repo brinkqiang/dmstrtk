@@ -1,5 +1,5 @@
 
-#include "dmstrtk.h"
+#include "strtk.h"
 
 int main( int argc, char* argv[] ) {
 
