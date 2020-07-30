@@ -54,61 +54,63 @@
 #include <fstream>
 #include <iomanip>
 
-#include "strtk.hpp"
+#include "dmstrtk.hpp"
 
 
 int main()
 {
-   /*
-      Note: process takes input from stdin.
-      usage: cat file.txt | strtk_hexview
-   */
-   static const std::size_t data_width = 16;
-   std::size_t current_address = 0;
+    /*
+       Note: process takes input from stdin.
+       usage: cat file.txt | strtk_hexview
+    */
+    static const std::size_t data_width = 16;
+    std::size_t current_address = 0;
 
-   char buffer[data_width];
-   char hex_buffer[2 * data_width];
+    char buffer[data_width];
+    char hex_buffer[2 * data_width];
 
-   std::cin.sync_with_stdio(false);
+    std::cin.sync_with_stdio(false);
 
-   for ( ; ; )
-   {
-      std::cin.read(reinterpret_cast<char*>(buffer),data_width);
+    for ( ; ; )
+    {
+        std::cin.read(reinterpret_cast<char*>(buffer),data_width);
 
-      if (!(std::cin.eof() || std::cin.bad()))
-      {
-         strtk::convert_bin_to_hex(buffer,buffer + data_width,hex_buffer);
-         //print the address offset
-         std::cout << std::hex << std::uppercase << std::setfill('0') << std::setw(10) << current_address << ' ';
+        if (!(std::cin.eof() || std::cin.bad()))
+        {
+            strtk::convert_bin_to_hex(buffer,buffer + data_width,hex_buffer);
+            //print the address offset
+            std::cout << std::hex << std::uppercase << std::setfill('0') << std::setw(
+                          10) << current_address << ' ';
 
-         //print the hexadecimal representation
-         std::cout.write(hex_buffer,2 * data_width);
-         std::cout << ' ';
+            //print the hexadecimal representation
+            std::cout.write(hex_buffer,2 * data_width);
+            std::cout << ' ';
 
-         //print the printable view representation
-         strtk::convert_to_printable_chars(buffer,buffer + data_width);
-         std::cout.write(buffer,data_width);
-         std::cout << '\n';
-         current_address += data_width;
-      }
-      else
-      {
-         std::size_t read_in_width = static_cast<std::size_t>(std::cin.gcount());
-
-         if (0 != read_in_width)
-         {
-            strtk::convert_bin_to_hex(buffer,buffer + read_in_width,hex_buffer);
-            std::cout << std::hex << std::uppercase << std::setw(10) << current_address << ' ';
-            std::cout.write(hex_buffer,(2 * read_in_width));
-            std::cout << std::string(2 * (16 - read_in_width) + 1, ' ');
-            strtk::convert_to_printable_chars(buffer,buffer + read_in_width);
-            std::cout.write(buffer,read_in_width);
+            //print the printable view representation
+            strtk::convert_to_printable_chars(buffer,buffer + data_width);
+            std::cout.write(buffer,data_width);
             std::cout << '\n';
-         }
+            current_address += data_width;
+        }
+        else
+        {
+            std::size_t read_in_width = static_cast<std::size_t>(std::cin.gcount());
 
-         break;
-      }
-   }
+            if (0 != read_in_width)
+            {
+                strtk::convert_bin_to_hex(buffer,buffer + read_in_width,hex_buffer);
+                std::cout << std::hex << std::uppercase << std::setw(10) << current_address <<
+                          ' ';
+                std::cout.write(hex_buffer,(2 * read_in_width));
+                std::cout << std::string(2 * (16 - read_in_width) + 1, ' ');
+                strtk::convert_to_printable_chars(buffer,buffer + read_in_width);
+                std::cout.write(buffer,read_in_width);
+                std::cout << '\n';
+            }
 
-   return 0;
+            break;
+        }
+    }
+
+    return 0;
 }

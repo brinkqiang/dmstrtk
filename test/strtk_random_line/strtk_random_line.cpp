@@ -35,7 +35,7 @@
 
 #include <random>
 
-#include "strtk.hpp"
+#include "dmstrtk.hpp"
 #include "dmrand.h"
 
 class random_line_selector

@@ -30,33 +30,35 @@
 #include <iostream>
 #include <vector>
 
-#include "strtk.hpp"
+#include "dmstrtk.hpp"
 
 
 int main()
 {
-   typedef std::vector<unsigned int> list_type;
-   typedef strtk::combination_iterator<list_type::iterator> iterator_type;
-   list_type uint_list;
+    typedef std::vector<unsigned int> list_type;
+    typedef strtk::combination_iterator<list_type::iterator> iterator_type;
+    list_type uint_list;
 
-   // n choose k
-   static const std::size_t n = 6;
-   static const std::size_t k = 4;
+    // n choose k
+    static const std::size_t n = 6;
+    static const std::size_t k = 4;
 
-   strtk::iota(uint_list,n,static_cast<unsigned int>(0));
+    strtk::iota(uint_list,n,static_cast<unsigned int>(0));
 
-   iterator_type itr(k, uint_list.begin(), uint_list.end());
-   const iterator_type end(uint_list.end());
+    iterator_type itr(k, uint_list.begin(), uint_list.end());
+    const iterator_type end(uint_list.end());
 
-   std::size_t count = 0;
-   while (end != itr)
-   {
-      iterator_type::range_type range = *itr;
+    std::size_t count = 0;
 
-      std::cout << strtk::text::right_align(4, '0', count++) << "\t" << strtk::join(" ", range) << std::endl;
+    while (end != itr)
+    {
+        iterator_type::range_type range = *itr;
 
-      ++itr;
-   }
+        std::cout << strtk::text::right_align(4, '0',
+                                              count++) << "\t" << strtk::join(" ", range) << std::endl;
 
-   return 0;
+        ++itr;
+    }
+
+    return 0;
 }

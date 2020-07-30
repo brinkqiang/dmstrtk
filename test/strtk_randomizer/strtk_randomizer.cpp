@@ -31,41 +31,44 @@
 #include <deque>
 #include <ctime>
 
-#include "strtk.hpp"
+#include "dmstrtk.hpp"
 
 
 int main(int argc, char* argv[])
 {
-   std::deque<std::string> str_lst;
+    std::deque<std::string> str_lst;
 
-   switch (argc)
-   {
-                // Take input from stdin
-      case 1  : strtk::load_from_text_file(std::cin,str_lst);
-                break;
+    switch (argc)
+    {
+    // Take input from stdin
+    case 1  :
+        strtk::load_from_text_file(std::cin,str_lst);
+        break;
 
-                // Take input from user specified file
-      case 2  : strtk::load_from_text_file(argv[1],str_lst);
-                break;
+    // Take input from user specified file
+    case 2  :
+        strtk::load_from_text_file(argv[1],str_lst);
+        break;
 
-      default :
-               {
-                  std::cout << "usage: strtk_randomizer <file name>" << std::endl;
-                  std::cout << "usage: cat data.txt | strtk_randomizer" << std::endl;
-                  return 1;
-               }
-   }
+    default :
+    {
+        std::cout << "usage: strtk_randomizer <file name>" << std::endl;
+        std::cout << "usage: cat data.txt | strtk_randomizer" << std::endl;
+        return 1;
+    }
+    }
 
-   if (!str_lst.empty())
-   {
-      #ifdef strtk_enable_random
-      strtk::random_permutation(str_lst,
-                                std::ostream_iterator<std::string>(std::cout,"\n"),
-                                static_cast<std::size_t>(::time(0)));
-      #else
-      std::copy(str_lst.begin(),str_lst.end(),
-                std::ostream_iterator<std::string>(std::cout,"\n"));
-      #endif
-   }
-   return 0;
+    if (!str_lst.empty())
+    {
+#ifdef strtk_enable_random
+        strtk::random_permutation(str_lst,
+                                  std::ostream_iterator<std::string>(std::cout,"\n"),
+                                  static_cast<std::size_t>(::time(0)));
+#else
+        std::copy(str_lst.begin(),str_lst.end(),
+                  std::ostream_iterator<std::string>(std::cout,"\n"));
+#endif
+    }
+
+    return 0;
 }

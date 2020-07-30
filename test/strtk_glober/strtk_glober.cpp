@@ -69,45 +69,46 @@
 #include <string>
 #include <vector>
 
-#include "strtk.hpp"
+#include "dmstrtk.hpp"
 
 
 class line_glober
 {
 public:
 
-   line_glober(const int argc, char* argv[])
-   {
-      pattern_list_.reserve(argc - 1);
-      strtk::parse(argc - 1,argv + 1,pattern_list_);
-      std::sort(pattern_list_.begin(),pattern_list_.end());
-   }
+    line_glober(const int argc, char* argv[])
+    {
+        pattern_list_.reserve(argc - 1);
+        strtk::parse(argc - 1,argv + 1,pattern_list_);
+        std::sort(pattern_list_.begin(),pattern_list_.end());
+    }
 
-   inline void operator()(const std::string& s) const
-   {
-      for (std::size_t i = 0; i < pattern_list_.size(); ++i)
-      {
-         if (strtk::match(pattern_list_[i],s))
-         {
-            std::cout << pattern_list_[i] << " matched " << s << std::endl;
-         }
-      }
-   }
+    inline void operator()(const std::string& s) const
+    {
+        for (std::size_t i = 0; i < pattern_list_.size(); ++i)
+        {
+            if (strtk::match(pattern_list_[i],s))
+            {
+                std::cout << pattern_list_[i] << " matched " << s << std::endl;
+            }
+        }
+    }
 
 private:
 
-   std::vector<std::string> pattern_list_;
+    std::vector<std::string> pattern_list_;
 };
 
 int main(int argc, char* argv[])
 {
-   if (argc <= 1)
-   {
-      std::cout << "strtk_glober <pattern_0> <pattern_1> .... <pattern_n>" << std::endl;;
-      return 1;
-   }
+    if (argc <= 1)
+    {
+        std::cout << "strtk_glober <pattern_0> <pattern_1> .... <pattern_n>" <<
+                  std::endl;;
+        return 1;
+    }
 
-   strtk::for_each_line(std::cin,line_glober(argc,argv));
+    strtk::for_each_line(std::cin,line_glober(argc,argv));
 
-   return 0;
+    return 0;
 }

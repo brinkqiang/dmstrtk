@@ -33,7 +33,7 @@
 #include <string>
 #include <map>
 
-#include "strtk.hpp"
+#include "dmstrtk.hpp"
 
 
 /*
@@ -48,90 +48,109 @@ struct line_parser
 {
 public:
 
-   line_parser(unsigned long long& word_count,
-               map_t& map,
-               Predicate& p)
-   : word_count_(word_count),
-     map_(map),
-     p_(p)
-   {
-      str_.reserve(32);
-   }
+    line_parser(unsigned long long& word_count,
+                map_t& map,
+                Predicate& p)
+        : word_count_(word_count),
+          map_(map),
+          p_(p)
+    {
+        str_.reserve(32);
+    }
 
-   inline void operator() (const std::string& s)
-   {
-      if (s.empty()) return;
-      strtk::split(p_,s,*this,strtk::split_options::compress_delimiters);
-   }
+    inline void operator() (const std::string& s)
+    {
+        if (s.empty())
+        {
+            return;
+        }
 
-   inline void operator=(const strtk::std_string::iterator_type& r)
-   {
-      if (r.first == r.second) return;
-      ++word_count_;
-      str_.assign(r.first,r.second);
-      strtk::convert_to_lowercase(str_);
-      ++map_[str_];
-   }
+        strtk::split(p_,s,*this,strtk::split_options::compress_delimiters);
+    }
 
-   inline line_parser& operator++()    { return (*this); }
-   inline line_parser& operator++(int) { return (*this); }
-   inline line_parser& operator*()     { return (*this); }
+    inline void operator=(const strtk::std_string::iterator_type& r)
+    {
+        if (r.first == r.second)
+        {
+            return;
+        }
+
+        ++word_count_;
+        str_.assign(r.first,r.second);
+        strtk::convert_to_lowercase(str_);
+        ++map_[str_];
+    }
+
+    inline line_parser& operator++()
+    {
+        return (*this);
+    }
+    inline line_parser& operator++(int)
+    {
+        return (*this);
+    }
+    inline line_parser& operator*()
+    {
+        return (*this);
+    }
 
 private:
 
-   inline line_parser& operator=(const line_parser&);
+    inline line_parser& operator=(const line_parser&);
 
-   unsigned long long& word_count_;
-   map_t& map_;
-   Predicate& p_;
-   std::string str_;
+    unsigned long long& word_count_;
+    map_t& map_;
+    Predicate& p_;
+    std::string str_;
 };
 
 int main(int argc, char* argv[])
 {
-   typedef strtk::multiple_char_delimiter_predicate predicate_t;
-   typedef line_parser<const predicate_t> lp_t;
+    typedef strtk::multiple_char_delimiter_predicate predicate_t;
+    typedef line_parser<const predicate_t> lp_t;
 
-   const std::string delimiters = strtk::ext_string::all_chars()
-                                - strtk::ext_string::all_lowercase_letters()
-                                - strtk::ext_string::all_uppercase_letters();
+    const std::string delimiters = strtk::ext_string::all_chars()
+                                   - strtk::ext_string::all_lowercase_letters()
+                                   - strtk::ext_string::all_uppercase_letters();
 
-   static const predicate_t predicate(delimiters);
+    static const predicate_t predicate(delimiters);
 
-   map_t word_list;
-   unsigned long long word_count = 0;
+    map_t word_list;
+    unsigned long long word_count = 0;
 
-   switch (argc)
-   {
-                // Consume input from stdin
-      case 1  : strtk::for_each_line(std::cin, lp_t(word_count, word_list, predicate));
-                break;
+    switch (argc)
+    {
+    // Consume input from stdin
+    case 1  :
+        strtk::for_each_line(std::cin, lp_t(word_count, word_list, predicate));
+        break;
 
-                // Consume input from user specified file
-      case 2  : strtk::for_each_line(argv[1], lp_t(word_count, word_list, predicate));
-                break;
+    // Consume input from user specified file
+    case 2  :
+        strtk::for_each_line(argv[1], lp_t(word_count, word_list, predicate));
+        break;
 
-      default :
-               {
-                  std::cout << "usage: strtk_wordfreq <file name>" << std::endl;
-                  std::cout << "usage: cat words.txt | strtk_wordfreq" << std::endl;
-                  return 1;
-               }
-   }
+    default :
+    {
+        std::cout << "usage: strtk_wordfreq <file name>" << std::endl;
+        std::cout << "usage: cat words.txt | strtk_wordfreq" << std::endl;
+        return 1;
+    }
+    }
 
-   std::cout << "Word count: " << word_count << std::endl;
-   std::cout << "Unique word count: " << word_list.size() << std::endl;
+    std::cout << "Word count: " << word_count << std::endl;
+    std::cout << "Unique word count: " << word_list.size() << std::endl;
 
-   map_t::iterator itr = word_list.begin();
+    map_t::iterator itr = word_list.begin();
 
-   while (word_list.end() != itr)
-   {
-      printf("%s %10d %10.9f\n",
-             strtk::text::right_align(15, ' ', itr->first).c_str(),
-             itr->second,
-             (1.0 * itr->second) / word_count);
-      ++itr;
-   }
+    while (word_list.end() != itr)
+    {
+        printf("%s %10d %10.9f\n",
+               strtk::text::right_align(15, ' ', itr->first).c_str(),
+               itr->second,
+               (1.0 * itr->second) / word_count);
+        ++itr;
+    }
 
-   return 0;
+    return 0;
 }

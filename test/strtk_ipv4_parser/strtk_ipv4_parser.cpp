@@ -28,99 +28,133 @@
 #include <string>
 #include <utility>
 
-#include "strtk.hpp"
+#include "dmstrtk.hpp"
 
 
 class ipv4_parser
 {
-   typedef strtk::tokenizer<const char*,strtk::single_delimiter_predicate<char> > tokenizer_type;
+    typedef strtk::tokenizer<const char*,strtk::single_delimiter_predicate<char> >
+    tokenizer_type;
 
 public:
 
-   ipv4_parser()
-   : predicate_('.')
-   {}
+    ipv4_parser()
+        : predicate_('.')
+    {}
 
-   inline bool operator()(const std::string& data, unsigned char octet[4])
-   {
-      typedef std::pair<const char*,const char*> iterator_type;
-      iterator_type token[4];
+    inline bool operator()(const std::string& data, unsigned char octet[4])
+    {
+        typedef std::pair<const char*,const char*> iterator_type;
+        iterator_type token[4];
 
-      if (4 != strtk::split_n(predicate_, data, 4, token))
-         return false;
+        if (4 != strtk::split_n(predicate_, data, 4, token))
+        {
+            return false;
+        }
 
-      if (!process_token(token[0],octet[0])) return false;
-      if (!process_token(token[1],octet[1])) return false;
-      if (!process_token(token[2],octet[2])) return false;
-      if (!process_token(token[3],octet[3])) return false;
+        if (!process_token(token[0],octet[0]))
+        {
+            return false;
+        }
 
-      return true;
-   }
+        if (!process_token(token[1],octet[1]))
+        {
+            return false;
+        }
 
-   inline bool operator()(const std::string& data, unsigned int& ip)
-   {
-      ip = 0;
-      return operator()(data,reinterpret_cast<unsigned char*>(&ip));
-   }
+        if (!process_token(token[2],octet[2]))
+        {
+            return false;
+        }
+
+        if (!process_token(token[3],octet[3]))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    inline bool operator()(const std::string& data, unsigned int& ip)
+    {
+        ip = 0;
+        return operator()(data,reinterpret_cast<unsigned char*>(&ip));
+    }
 
 private:
 
-   inline bool process_token(const std::pair<const char*,const char*>& token, unsigned char& octet)
-   {
-      unsigned int v = 0;
-      if (!strtk::fast::numeric_convert(strtk::distance(token), token.first, v, true))
-         return false;
-      if (v > 255)
-         return false;
-      octet = static_cast<unsigned char>(v);
-      return true;
-   }
+    inline bool process_token(const std::pair<const char*,const char*>& token,
+                              unsigned char& octet)
+    {
+        unsigned int v = 0;
 
-   strtk::single_delimiter_predicate<char> predicate_;
+        if (!strtk::fast::numeric_convert(strtk::distance(token), token.first, v, true))
+        {
+            return false;
+        }
+
+        if (v > 255)
+        {
+            return false;
+        }
+
+        octet = static_cast<unsigned char>(v);
+        return true;
+    }
+
+    strtk::single_delimiter_predicate<char> predicate_;
 };
 
 void print_octet(const unsigned char octet[4])
 {
-   strtk::ext_string s;
-   s << (unsigned int)(octet[0]) << "."
-     << (unsigned int)(octet[1]) << "."
-     << (unsigned int)(octet[2]) << "."
-     << (unsigned int)(octet[3]);
-   std::cout << "IP (octet) = " << strtk::text::right_align(15, ' ', s.as_string());
+    strtk::ext_string s;
+    s << (unsigned int)(octet[0]) << "."
+      << (unsigned int)(octet[1]) << "."
+      << (unsigned int)(octet[2]) << "."
+      << (unsigned int)(octet[3]);
+    std::cout << "IP (octet) = " << strtk::text::right_align(15, ' ',
+              s.as_string());
 }
 
 int main()
 {
-   unsigned char octet[4] = {0};
+    unsigned char octet[4] = {0};
 
-   static const std::string ip[] =
-                {
-                   "1.1.1.1",
-                   "12.12.12.12",
-                   "123.123.123.123"
-                };
+    static const std::string ip[] =
+    {
+        "1.1.1.1",
+        "12.12.12.12",
+        "123.123.123.123"
+    };
 
-   static const std::size_t ip_size = sizeof(ip) / sizeof(std::string);
+    static const std::size_t ip_size = sizeof(ip) / sizeof(std::string);
 
-   ipv4_parser parser;
+    ipv4_parser parser;
 
-   for (std::size_t i = 0; i < ip_size; ++i)
-   {
-      if (!parser(ip[i],octet))
-         std::cout << "Failed to parse ip: " << ip[i] << std::endl;
-      else
-      {
-         std::cout << "IP (string):" << strtk::text::right_align(15, ' ', ip[i]) << "\t";
-         print_octet(octet);
-      }
+    for (std::size_t i = 0; i < ip_size; ++i)
+    {
+        if (!parser(ip[i],octet))
+        {
+            std::cout << "Failed to parse ip: " << ip[i] << std::endl;
+        }
+        else
+        {
+            std::cout << "IP (string):" << strtk::text::right_align(15, ' ', ip[i]) << "\t";
+            print_octet(octet);
+        }
 
-      unsigned int ip_int = 0;
+        unsigned int ip_int = 0;
 
-      if (!parser(ip[i],ip_int))
-         std::cout << "Failed to parse ip_int: " << ip[i] << std::endl;
-      else
-         std::cout << "\tIP(int): " << strtk::text::right_align(' ',ip_int) << std::endl;
-   }
+        if (!parser(ip[i],ip_int))
+        {
+            std::cout << "Failed to parse ip_int: " << ip[i] << std::endl;
+        }
+        else
+        {
+            std::cout << "\tIP(int): " << strtk::text::right_align(' ',
+                      ip_int) << std::endl;
+        }
+    }
 
-   return 0;
+    return 0;
 }

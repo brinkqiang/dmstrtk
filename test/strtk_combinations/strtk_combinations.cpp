@@ -40,40 +40,54 @@
 #include <vector>
 #include <algorithm>
 
-#include "strtk.hpp"
+#include "dmstrtk.hpp"
 
 
 void usage(const std::string& msg = "")
 {
-   std::cout << "usage: strtk_combination <r> <s_1> <s_2> .... <s_k>" << std::endl;
-   if (!msg.empty())
-      std::cout << "error message: " << msg << std::endl;
+    std::cout << "usage: strtk_combination <r> <s_1> <s_2> .... <s_k>" << std::endl;
+
+    if (!msg.empty())
+    {
+        std::cout << "error message: " << msg << std::endl;
+    }
 }
 
 void print(std::vector<std::string>::iterator begin,
            std::vector<std::string>::iterator end)
 {
-   std::cout << strtk::join("\t",begin,end) << std::endl;
+    std::cout << strtk::join("\t",begin,end) << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
-   if (argc < 3) return (usage(),1);
+    if (argc < 3)
+    {
+        return (usage(),1);
+    }
 
-   std::size_t r = 0;
+    std::size_t r = 0;
 
-   if (!strtk::string_to_type_converter(std::string(argv[1]),r))
-      return (usage("Invalid 'r' value."),1);
+    if (!strtk::string_to_type_converter(std::string(argv[1]),r))
+    {
+        return (usage("Invalid 'r' value."),1);
+    }
 
-   if (0 == r) return 0;
+    if (0 == r)
+    {
+        return 0;
+    }
 
-   std::vector<std::string> str_lst;
-   strtk::parse(argc - 2, argv + 2, str_lst);
-   std::sort(str_lst.begin(),str_lst.end());
+    std::vector<std::string> str_lst;
+    strtk::parse(argc - 2, argv + 2, str_lst);
+    std::sort(str_lst.begin(),str_lst.end());
 
-   if (r > str_lst.size()) return (usage("r > k"),1);
+    if (r > str_lst.size())
+    {
+        return (usage("r > k"),1);
+    }
 
-   strtk::for_each_combination(str_lst.begin(), str_lst.end(), r, &print);
+    strtk::for_each_combination(str_lst.begin(), str_lst.end(), r, &print);
 
-   return 0;
+    return 0;
 }
