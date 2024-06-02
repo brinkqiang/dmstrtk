@@ -26,6 +26,5 @@ dmstrtk
 ```cpp
 ```
 ## Contacts
-[![Join the chat](https://badges.gitter.im/brinkqiang/dmstrtk/Lobby.svg)](https://gitter.im/brinkqiang/dmstrtk)
 
 ## Thanks
