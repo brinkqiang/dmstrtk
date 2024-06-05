@@ -7,5 +7,12 @@ INCLUDE(cmake/ModuleImport.cmake)
 INCLUDE(cmake/ModuleCompileOptions.cmake)
 ModuleSetCompileOptions()
 
+
 ModuleImportAll("thirdparty")
-ExeImport("test" "")
+
+InterfaceImport("dmstrtk" "include" "")
+
+if (PROJECT_IS_TOP_LEVEL)
+    ExeImport("test" "dmstrtk")
+endif(PROJECT_IS_TOP_LEVEL)
+
