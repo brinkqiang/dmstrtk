@@ -7,9 +7,6 @@ INCLUDE(cmake/ModuleImport.cmake)
 INCLUDE(cmake/ModuleCompileOptions.cmake)
 ModuleSetCompileOptions()
 
-
-ModuleImportAll("thirdparty")
-
 InterfaceImport("dmstrtk" "include" "")
 
 if (PROJECT_IS_TOP_LEVEL)
