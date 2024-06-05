@@ -24071,16 +24071,18 @@ public:
         return *this;
     }
 
-    inline bool operator==(const T& t)
-    {
+	template <typename TConvertibleType>
+	inline bool operator==(const TConvertibleType& t)
+	{
         return initialised_ && (t_ == t);
-    }
+	}
 
-    template <typename TConvertibleType>
-    inline bool operator!=(const TConvertibleType& t)
-    {
-        return !(operator==(t));
-    }
+	template <typename TConvertibleType>
+	inline bool operator!=(const TConvertibleType& t)
+	{
+		return !(operator==(t));
+	}
+
 
     inline T& operator()()
     {
@@ -24150,12 +24152,12 @@ private:
     bool initialised_;
 };
 
-inline bool operator==(const char* s, const attribute<std::string>& attrib)
+inline bool operator==(const std::string& s, const attribute<std::string>& attrib)
 {
     return attrib.value() == s;
 }
 
-inline bool operator!=(const char* s, const attribute<std::string>& attrib)
+inline bool operator!=(const std::string& s, const attribute<std::string>& attrib)
 {
     return !(s == attrib.value());
 }
