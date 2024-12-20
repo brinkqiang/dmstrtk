@@ -14,9 +14,20 @@
  *****************************************************************
 */
 
-
-#ifndef INCLUDE_STRTK_HPP
+#ifndef __DMSTRTK_H_INCLUDE__
+#define __DMSTRTK_H_INCLUDE__
 #define INCLUDE_STRTK_HPP
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4996 4615)
+#endif
+
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wunused-result"
+#endif
 
 
 #include <algorithm>
@@ -28153,4 +28164,15 @@ static inline std::string data()
 
 } // namespace strtk
 
+#pragma warning(enbale:4996 4615)
+
+
+#ifdef _MSC_VER
+#pragma warning(pop)
 #endif
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+
+#endif // __DMSTRTK_H_INCLUDE__
