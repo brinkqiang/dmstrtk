@@ -508,7 +508,7 @@ inline std::string type_to_string(const T& t)
    namespace strtk { namespace details {       \
 
 #define strtk_end_register_string_to_type \
-   }}                                        \
+   } }                                        \
 
 #define strtk_string_to_type_begin(Type)                                               \
    namespace strtk { namespace details { template <typename Iterator>                     \
@@ -516,7 +516,7 @@ inline std::string type_to_string(const T& t)
                                              Type& t, details::not_supported_type_tag&) { \
 
 #define strtk_string_to_type_end() \
-   }}}                                \
+   } } }                                \
 
 template <typename T,
           typename Allocator,
@@ -3517,7 +3517,7 @@ public:
     }
 
     template <typename Iterator>
-    inline void operator()(const std::pair<Iterator,Iterator>& r) const
+    inline void operator()(const std::pair<Iterator,Iterator>& r)
     {
         value_type t;
 
@@ -11798,7 +11798,7 @@ inline std::size_t parse(const int& argc, char* argv[],
    ,ignore_token()                    \
 
 #define strtk_parse_end() \
-   );}}                      \
+   );} }                      \
 
 #define strtk_def_parse_n_seq(Type)                                                                      \
    template <typename T,                                                                                    \
@@ -19785,7 +19785,7 @@ strtk_register_decsink_type_tag(double     )
 strtk_register_decsink_type_tag(long double)
 
 #define strtk_register_userdef_type_sink(T) \
-      namespace strtk { namespace details { strtk_register_sink_type_tag(T) }}
+      namespace strtk { namespace details { strtk_register_sink_type_tag(T) } }
 
 #undef strtk_register_unsigned_type_tag
 #undef strtk_register_signed_type_tag
@@ -28163,9 +28163,6 @@ static inline std::string data()
 } // namespace information
 
 } // namespace strtk
-
-#pragma warning(enbale:4996 4615)
-
 
 #ifdef _MSC_VER
 #pragma warning(pop)
